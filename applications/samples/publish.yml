@@ -1,0 +1,48 @@
+- name: publishing sample apps
+  vars_prompt:
+    - name: image_version
+      prompt: "please type image version"
+      private: no
+  vars_files:
+    - vars/common.yml
+  hosts: "ansible_exec"
+  tasks:
+    - add_host:
+        name: "vars_holder"
+        angular_image: "{{ angular_image }}"
+        react_image: "{{ react_image }}"
+        dotnet_image: "{{ dotnet_image }}"
+        angular_local_image: "{{ angular_local_image }}"
+        react_local_image: "{{ react_local_image }}"
+        dotnet_local_image: "{{ dotnet_local_image }}"
+        angular_service: "{{ angular_service }}"
+        react_service: "{{ react_service }}"
+        dotnet_service: "{{ dotnet_service }}"
+        angular_publish_port: "{{ angular_publish_port }}"
+        angular_target_port: "{{ angular_target_port }}"
+        react_publish_port: "{{ react_publish_port }}"
+        react_target_port: "{{ react_target_port }}"
+        dotnet_publish_port: "{{ dotnet_publish_port }}"
+        dotnet_target_port: "{{ dotnet_target_port }}"
+    - include: ../../deployers/docker/buildTasks.yml
+
+- name: deploying sample apps
+  vars:
+    - angular_image: "{{ hostvars['vars_holder']['angular_image'] }}"
+    - react_image: "{{ hostvars['vars_holder']['react_image'] }}"
+    - dotnet_image: "{{ hostvars['vars_holder']['dotnet_image'] }}"
+    - angular_local_image: "{{ hostvars['vars_holder']['angular_local_image'] }}"
+    - react_local_image: "{{ hostvars['vars_holder']['react_local_image'] }}"
+    - dotnet_local_image: "{{ hostvars['vars_holder']['dotnet_local_image'] }}"
+    - angular_service: "{{ hostvars['vars_holder']['angular_service'] }}"
+    - react_service: "{{ hostvars['vars_holder']['react_service'] }}"
+    - dotnet_service: "{{ hostvars['vars_holder']['dotnet_service'] }}"
+    - angular_publish_port: "{{ hostvars['vars_holder']['angular_publish_port'] }}"
+    - angular_target_port: "{{ hostvars['vars_holder']['angular_target_port'] }}"
+    - react_publish_port: "{{ hostvars['vars_holder']['react_publish_port'] }}"
+    - react_target_port: "{{ hostvars['vars_holder']['react_target_port'] }}"
+    - dotnet_publish_port: "{{ hostvars['vars_holder']['dotnet_publish_port'] }}"
+    - dotnet_target_port: "{{ hostvars['vars_holder']['dotnet_target_port'] }}"
+  hosts: "manager_master"
+  tasks:
+    - include: ../../deployers/docker/deployTasks.yml

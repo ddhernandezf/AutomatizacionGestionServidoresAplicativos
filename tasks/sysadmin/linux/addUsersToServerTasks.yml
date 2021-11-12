@@ -1,0 +1,59 @@
+- name: creating admin user
+  become: yes
+  ansible.builtin.user:
+    name: "{{ admin_user }}"
+    comment: "{{ admin_name }}"
+    create_home: yes
+
+- name: creating devops user
+  become: yes
+  ansible.builtin.user:
+    name: "{{ devops_user }}"
+    comment: "{{ devops_name }}"
+    create_home: yes
+
+- name: relate docker to admin
+  become: yes
+  user:
+    name: "{{ admin_user }}"
+    groups: "{{ user_group }}"
+    append: yes
+
+- name: relate docker to devops
+  become: yes
+  user:
+    name: "{{ devops_user }}"
+    groups: "{{ user_group }}"
+    append: yes
+
+- name: creating ssh path for admin
+  become: yes
+  file:
+    path: "{{ admin_ssh_path }}"
+    state: directory
+    owner: "{{ admin_user }}"
+    group: "{{ admin_user }}"
+
+- name: creating ssh path for devops
+  become: yes
+  file:
+    path: "{{ devops_ssh_path }}"
+    state: directory
+    owner: "{{ devops_user }}"
+    group: "{{ devops_user }}"
+
+- name: copying ssh key for admin
+  become: yes
+  copy:
+    src: "~/.ssh/hyperv/{{ admin_user }}.pub"
+    dest: "{{ admin_ssh_path }}/authorized_keys"
+    owner: "{{ admin_user }}"
+    group: "{{ admin_user }}"
+
+- name: copying ssh key for devops
+  become: yes
+  copy:
+    src: "~/.ssh/hyperv/{{ devops_user }}.pub"
+    dest: "{{ devops_ssh_path }}/authorized_keys"
+    owner: "{{ devops_user }}"
+    group: "{{ devops_user }}"

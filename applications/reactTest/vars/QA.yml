@@ -1,0 +1,11 @@
+clone_path: /devops/react-test-app/repository
+build_path: /deploy/react-test-app/build/qa
+env_path: /ansible/applications/reactTest/environment/
+env_file: .env.qa
+image_tag: qa-
+registry_server: swarm-1:5000
+service_name: reactTestApp
+image_name: react-test-app
+replica_no: 1
+ext_port: 9001
+int_port: 80

@@ -1,0 +1,29 @@
+registry_server: manager-cluster-1:5000
+local_server: localhost:5000
+angular_repo: git@github.com:ddhernandezf/angular-sample.git
+react_repo: git@github.com:ddhernandezf/react-sample.git
+dotnet_repo: git@github.com:ddhernandezf/webapi-sample.git
+angular_path: /devops/angular-sample/repository
+react_path: /devops/react-sample/repository
+dotnet_path: /devops/webapi-sample/repository
+angular_branch: "master"
+react_branch: "master"
+dotnet_branch: "master"
+angular_image_name: angular-sample-app
+react_image_name: react-sample-app
+dotnet_image_name: dotnet-sample-app
+angular_image: "{{ registry_server }}/{{ angular_image_name }}:{{ image_version }}"
+react_image: "{{ registry_server }}/{{ react_image_name }}:{{ image_version }}"
+dotnet_image: "{{ registry_server }}/{{ dotnet_image_name }}:{{ image_version }}"
+angular_local_image: "{{ local_server }}/{{ angular_image_name }}:{{ image_version }}"
+react_local_image: "{{ local_server }}/{{ react_image_name }}:{{ image_version }}"
+dotnet_local_image: "{{ local_server }}/{{ dotnet_image_name }}:{{ image_version }}"
+angular_service: angular_sample
+react_service: react_sample
+dotnet_service: webapi_sample
+angular_publish_port: 9001
+angular_target_port: 80
+react_publish_port: 9002
+react_target_port: 80
+dotnet_publish_port: 9003
+dotnet_target_port: 80

@@ -1,0 +1,11 @@
+clone_path: /devops/react-test-app/repository
+build_path: /deploy/react-test-app/build/prod
+env_path: /ansible/applications/reactTest/environment/
+env_file: .env.prod
+image_tag: prod-
+registry_server: swarm-1:5000
+service_name: reactTestAppProd
+image_name: react-test-app
+replica_no: 2
+ext_port: 9002
+int_port: 80

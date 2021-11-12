@@ -1,0 +1,6 @@
+- name: adding {{ new_user }} to {{ host_name }}
+  become: yes
+  ansible.builtin.user:
+    name: "{{ new_user }}"
+    comment: "{{ new_name }}"
+    create_home: yes

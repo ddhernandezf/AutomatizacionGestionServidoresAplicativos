@@ -1,0 +1,6 @@
+- name: relate groups to user
+  become: yes
+  user:
+    name: "{{ new_user }}"
+    groups: "{{ user_group }}"
+    append: yes

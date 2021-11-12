@@ -1,0 +1,62 @@
+- name: clone path for angular
+  become: yes
+  file:
+    path: "{{ angular_path }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: clone path for react
+  become: yes
+  file:
+    path: "{{ react_path }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: clone path for webapi
+  become: yes
+  file:
+    path: "{{ dotnet_path }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: clone angular-sample project
+  git:
+    repo: "{{ angular_repo }}"
+    dest: "{{ angular_path }}"
+    depth: 1
+    version: "{{ angular_branch }}"
+
+- name: clone react-sample project
+  git:
+    repo: "{{ react_repo }}"
+    dest: "{{ react_path }}"
+    depth: 1
+    version: "{{ react_branch }}"
+
+- name: clone webapi-sample project
+  git:
+    repo: "{{ dotnet_repo }}"
+    dest: "{{ dotnet_path }}"
+    depth: 1
+    version: "{{ dotnet_branch }}"
+
+- name: building angular-sample image
+  shell: docker build -t {{ angular_image }} --no-cache {{ angular_path }}
+
+- name: building react-sample image
+  shell: docker build -t {{ react_image }} --no-cache {{ react_path }}
+
+- name: building webapi-sample image
+  shell: docker build -t {{ dotnet_image }} --no-cache {{ dotnet_path }}
+
+- name: pushing angular-sample image
+  shell: docker push {{ angular_image }}
+
+- name: pushing react-sample image
+  shell: docker push {{ react_image }}
+
+- name: pushing webapi-sample image
+  shell: docker push {{ dotnet_image }}

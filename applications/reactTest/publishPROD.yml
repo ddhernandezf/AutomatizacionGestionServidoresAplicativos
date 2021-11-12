@@ -1,0 +1,35 @@
+- name: building docker image for reactTest application on {{ env_flag }}
+  vars:
+    - env_flag: "PROD"
+    - branch_name: "master"
+  vars_prompt:
+    - name: image_version
+      prompt: "please type image version"
+      private: no
+  vars_files:
+    - ../../machines/buildMachine.yml
+    - ../../credentials/admin.yml
+    - vars/common.yml
+    - vars/{{ env_flag }}.yml
+  hosts: "{{ build_server }}"
+  connection: "{{ build_connection }}"
+  tasks:
+    - add_host:
+        name: "vars_holder"
+        image_version: "{{ image_version }}"
+        env_flag: "{{ env_flag }}"
+    - include: ../../deployers/react/reactBuildTask.yml
+
+- name: deploying reactTest application on {{ env_flag }}
+  vars_files:
+    - ../../credentials/devops.yml
+    - vars/{{ env_flag }}.yml
+  vars:
+    - env_flag: "{{ hostvars['vars_holder']['env_flag'] }}"
+    - remote_user: "devops"
+    - deploy_server: "swarm_master"
+    - image_version: "{{ hostvars['vars_holder']['image_version'] }}"
+  remote_user: "{{ remote_user }}"
+  hosts: "{{ deploy_server }}"
+  tasks:
+    - include: ../../deployers/react/reactDeployTask.yml

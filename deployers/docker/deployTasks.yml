@@ -1,0 +1,44 @@
+- name: pulling angular-sample image
+  shell: docker pull {{ angular_image }}
+
+- name: pulling react-sample image
+  shell: docker pull {{ react_image }}
+
+- name: pulling webapi-sample image
+  shell: docker pull {{ dotnet_image }}
+
+- name: tagging angular-sample image
+  shell: docker tag {{ angular_image }} {{ angular_local_image }}
+
+- name: tagging react-sample image
+  shell: docker tag {{ react_image }} {{ react_local_image }}
+
+- name: tagging webapi-sample image
+  shell: docker tag {{ dotnet_image }} {{ dotnet_local_image }}
+
+- name: updating angular-sample service
+  docker_swarm_service:
+    name: "{{ angular_service }}"
+    image: "{{ angular_local_image }}"
+    replicas: 3
+    publish:
+      - published_port: "{{ angular_publish_port }}"
+        target_port: "{{ angular_target_port }}"
+
+- name: updating react-sample service
+  docker_swarm_service:
+    name: "{{ react_service }}"
+    image: "{{ react_local_image }}"
+    replicas: 3
+    publish:
+      - published_port: "{{ react_publish_port }}"
+        target_port: "{{ react_target_port }}"
+
+- name: updating webapi-sample service
+  docker_swarm_service:
+    name: "{{ dotnet_service }}"
+    image: "{{ dotnet_local_image }}"
+    replicas: 3
+    publish:
+      - published_port: "{{ dotnet_publish_port }}"
+        target_port: "{{ dotnet_target_port }}"

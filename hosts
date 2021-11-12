@@ -1,0 +1,35 @@
+#front-cluster-1 ansible_host=192.168.5.21
+manager-cluster-1 ansible_host=192.168.5.35
+docker ansible_host=192.168.5.10
+test-cluster-1 ansible_host=192.168.5.40
+test-cluster-2 ansible_host=192.168.5.41
+test-cluster-3 ansible_host=192.168.5.42
+localhost
+
+[test_cluster]
+test-cluster-1
+test-cluster-2
+test-cluster-3
+
+[admin_test:children]
+test_cluster
+
+[manager_master]
+manager-cluster-1
+
+[ansible_exec]
+localhost
+
+[docker_server]
+docker
+
+[swarm_master]
+#front-cluster-1
+manager-cluster-1
+
+[admin:children]
+docker_server
+swarm_master
+
+[intra_docker]
+docker

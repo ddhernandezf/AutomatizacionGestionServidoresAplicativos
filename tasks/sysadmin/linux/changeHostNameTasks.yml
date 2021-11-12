@@ -1,0 +1,6 @@
+- hostname:
+    name: "{{ inventory_hostname  }}"
+
+- lineinfile:
+    path: /etc/hosts
+    line: "127.0.0.1 {{ inventory_hostname  }}"

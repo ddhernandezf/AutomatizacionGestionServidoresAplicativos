@@ -1,0 +1,15 @@
+- name: creating ssh path{{ ssh_path }}
+  become: yes
+  file:
+    path: "{{ ssh_path }}"
+    state: directory
+    owner: "{{ new_user }}"
+    group: "{{ new_user }}"
+
+- name: copying ssh key
+  become: yes
+  copy:
+    src: "~/.ssh/hyperv/{{ new_user }}.pub"
+    dest: "{{ ssh_path }}/authorized_keys"
+    owner: "{{ new_user }}"
+    group: "{{ new_user }}"

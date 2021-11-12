@@ -1,0 +1,61 @@
+- name: deletng prexisting ohmyzsh
+  file:
+    path: ~/.oh-my-zsh
+    state: absent
+
+- name: update packages
+  become: yes
+  apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+- name: installing zsh, git, powerline, byobu
+  become: yes
+  apt:
+    name: ['zsh', 'git-core', 'fonts-powerline', 'byobu']
+    state: present
+
+- name: making directory downloads
+  file:
+    path: ~/downloads
+    state: directory
+    recurse: yes
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: downloading oh-my-zshell
+  get_url:
+    url: https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh
+    dest: ~/downloads/oh-my-zshell.sh
+    mode: 0777
+
+- name: installing oh-my-zshell
+  shell: zsh ~/downloads/oh-my-zshell.sh -Y
+  async: 60
+  poll: 60
+
+- name: opening byobu
+  shell: byobu
+  async: 5
+  poll: 5
+  ignore_errors: yes
+
+- name: enabling byobu
+  shell: byobu-enable
+  async: 5
+  poll: 5
+
+- name: change user shell to zsh
+  become: yes
+  user:
+    name: "{{ ansible_user }}"
+    shell: /bin/zsh
+
+- name: remove installer downloaded
+  file:
+    path: ~/downloads/oh-my-zshell.sh
+    state: absent
+
+- name: setting darkblood theme
+  lineinfile:
+    path: ~/.zshrc
+    regexp: '^ZSH_THEME='
+    line: 'ZSH_THEME="darkblood"'

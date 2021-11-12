@@ -1,0 +1,18 @@
+- name: deploying reactTest application on {{ env_flag }}
+  vars_prompt:
+    - name: env_flag
+      prompt: "please type environment (QA | PROD) {{ remote_user }}"
+      private: no
+    - name: image_version
+      prompt: "please type image version"
+      private: no
+    - name: deploy_server
+      prompt: "please types servers name or groups name"
+      private: no
+  vars_files:
+    - ../../../credentials/devops.yml
+    - ../vars/{{ env_flag }}.yml
+  remote_user: "{{ remote_user }}"
+  hosts: "{{ deploy_server }}"
+  tasks:
+    - include: ../../../deployers/react/reactDeployTask.yml

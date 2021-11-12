@@ -1,0 +1,20 @@
+- name: building docker image for reactTest application on {{ env_flag }}
+  vars_prompt:
+    - name: env_flag
+      prompt: "please type environment (QA | PROD)"
+      private: no
+    - name: branch_name
+      prompt: "please type branch name"
+      private: no
+    - name: image_version
+      prompt: "please type image version"
+      private: no
+  vars_files:
+    - ../../../machines/buildMachine.yml
+    - ../../../credentials/admin.yml
+    - ../vars/common.yml
+    - ../vars/{{ env_flag }}.yml
+  hosts: "{{ build_server }}"
+  connection: "{{ build_connection }}"
+  tasks:
+    - include: ../../../deployers/react/reactBuildTask.yml

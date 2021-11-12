@@ -1,0 +1,3 @@
+ansible_user: exampleUser
+ansible_ssh_private_key_file: ~/.ssh/hyperv/exampleUser
+ansible_connection: ssh

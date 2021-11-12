@@ -1,0 +1,42 @@
+- name: updating apt
+  become: yes
+  apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+- name: docker prerequisites
+  become: yes
+  apt:
+    name: ['apt-transport-https', 'ca-certificates', 'curl', 'gnupg', 'lsb-release']
+    state: present
+
+- name: adding docker gpg key
+  become: yes
+  apt_key: url=https://download.docker.com/linux/ubuntu/gpg
+
+- name: adding docker apt repo
+  become: yes
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/{{ ansible_system | lower }}/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable
+
+- name: updating apt
+  become: yes
+  apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+- name: installing docker
+  become: yes
+  apt:
+    name: ['docker-ce', 'docker-ce-cli', 'containerd.io', 'docker-compose']
+    state: present
+
+- name: creating docker group
+  become: yes
+  group:
+    name: docker
+    state: present
+
+- name: adding user to docker group
+  become: yes
+  shell: usermod -aG docker "{{ ansible_user }}"
+
+- name: enabling docker service
+  become: yes
+  shell: systemctl enable --now docker

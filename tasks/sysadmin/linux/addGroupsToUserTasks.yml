@@ -1,0 +1,5 @@
+- name: relate groups to user
+  user:
+    name: "{{ username }}"
+    groups: "{{ groups_package }}"
+    append: yes
